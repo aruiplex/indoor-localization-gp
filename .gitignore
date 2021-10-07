@@ -1,2 +1,6 @@
 /venv
 /start
+*.model
+*.csv
+*.pyc
+*.drawio

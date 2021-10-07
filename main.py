@@ -1,104 +1,130 @@
 import os
+import GPy
 import pandas as pd
 import numpy as np
+import random
 import matplotlib.pyplot as plt
-from pandas.core.frame import DataFrame
-import GPy
-import gpytorch as gt
-import pickle
+import pickle as pk
+import sklearn.preprocessing
+
+# def dataset_limitaion(df: pd.DataFrame):
+#     df[]
 
 
-def handle_b_0_f0() -> np.ndarray:
-    _file = open("./data_silce/building_0_floor_0.csv", "r")
-    df: DataFrame = pd.read_csv(_file)
-    # arr = df.to_numpy()
-    return df
+def increase_pred_input_nd(num, df_lim: pd.DataFrame, data_set: int):
+    """generate input value to prediction, which base on uniform random
 
+    Args:
+        num (int): the number of generating
+        kwarg:  
+            x_min = kwarg["x_min"]
+            x_max = kwarg["x_max"]
+            y_min = kwarg["y_min"]
+            y_max = kwarg["y_max"]
 
-def generate_multi_x_y():
-    _file = open("./data_silce/building_0_floor_0.csv", "r")
-    df: DataFrame = pd.read_csv(_file)
-    x = df[["LONGITUDE", "LATITUDE"]].to_numpy()
-    y = df[["WAP007"]].to_numpy()
-    return x, y
+    Returns:
+        np.ndarray: a 2*num array
+         df_lim.loc[df_lim["DATASET"]=="10"]
 
-
-def handler_all_data():
-    """check which column has not -110 data
     """
-    arr = handle_b_0_f0().to_numpy()
-    for i in range(1, 521):
-        rss_max = arr[:, i].max()
-        if int(rss_max) != -110:
-            print(f"i: {i}, rss_max = {rss_max}")
+    df_lim_dataset = df_lim.loc[df_lim["DATASET"] == data_set]
+    x_min = df_lim_dataset["LONGITUDE"]["min"].values[0]
+    x_max = df_lim_dataset["LONGITUDE"]["max"].values[0]
+    y_min = df_lim_dataset["LATITUDE"]["min"].values[0]
+    y_max = df_lim_dataset["LATITUDE"]["max"].values[0]
+    l = []
+    for _ in range(num):
+        l.append(
+            [random.uniform(x_min, x_max), random.uniform(
+                y_min, y_max), data_set]
+        )
+    xy = np.array(l)
+    return xy
 
 
-def write_into_file(l):
-    file_ = open("./temp", "w")
-    file_.write(l)
-
-
-def handle_7_column():
-    """use gpy to regression 
-    """
-    df = handle_b_0_f0()
-    # sub_df = df[["WAP007", "SPACEID"]]
-    sub_df = df["WAP007"]
-    arr: np.ndarray = sub_df.to_numpy()
-    arr = np.sort(arr, axis=0)
-    x = np.arange(len(arr)).reshape((-1, 1))
-    y = arr[:, None]
-    kernel = GPy.kern.RBF(input_dim=1, variance=1., lengthscale=1.)
-    m = GPy.models.GPRegression(x, y, kernel)
-    m.optimize(messages=True)
-    m.plot()
-    plt.show()
-
-
-def handle_multi_columns():
-    """use gpy to regression 
-    """
-    df = handle_b_0_f0()
-    arr: np.ndarray = df.to_numpy()
-    x = np.arange(len(arr)).reshape((-1, 1))
-    y = arr
-    kernel = GPy.kern.RBF(input_dim=1, variance=1., lengthscale=1.)
-    m = GPy.models.GPRegression(x, y, kernel)
-    m.optimize(messages=True)
-    pred = m.predict(np.array([[1061]]))
-    value: np.ndarray = pred[0].round().astype(int)
-    l = value.tolist()
-    write_into_file(str(l))
-    # print(pred)
-    # m.plot()
-    # plt.show()
-
-
-def predict_by_position(x, y):
-    filename = "./model_007_008"
-    if not os.path.isfile(filename):
-        f = open(filename, "wb")
-        kernel = GPy.kern.RBF(input_dim=1, variance=1., lengthscale=1.)
-        m = GPy.models.GPRegression(x, y, kernel)
-        m.optimize(messages=True)
-        pickle.dump(m, f)
+def dump_and_load_model(m):
+    filename = "./model.ml"
+    if os.path.exists(filename):
+        with open(filename, "rb") as _f:
+            return pk.load(_f)
     else:
-        f = open(filename, "rb")
-        m = pickle.load(f)
-    x_pred = np.array([[-7632.1436, 4864982.2171]])
-    y_pred = m.predict(x_pred)[0]
-    m.plot()
+        with open(filename, "wb") as _f:
+            m.optimize(messages=True)
+            pk.dump(m, _f)
+            return m
+
+
+def plot(xy, z, xy_pred, z_pred, n_dim):
+    """plot real data and predicted data
+    all input data are n*1 shape
+
+    Args:
+        xy (np.ndarray): real data x and y coordination
+        z (np.ndarray): real data rss
+        xy_pred (np.ndarray): prediction x and y coordication
+        z_pred (np.ndarray): prediction rss
+        n_dim (int): plot the specific dimension.
+    """
+    fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+    # ax.plot3D(x, y, z, 'gray')
+    x_axis = xy[:, 0]
+    y_axis = xy[:, 1]
+    ax.scatter(x_axis, y_axis, z[:, n_dim], c=z[:, n_dim],
+               cmap='Greys', label="WAP007")
+    if xy_pred is not None:
+        ax.scatter(xy_pred[:, 0], xy_pred[:, 1], z_pred[:, n_dim],
+                   c=z_pred[:, n_dim], cmap='hsv', label="pred")
+    plt.legend(loc='upper left')
     plt.show()
-    print(y_pred)
-    # handle_7_column()
-    # handler_all_data()
-    # handle_multi_columns()
 
 
-if __name__ == "__main__":
-    x, y = generate_multi_x_y()
-    print("x: ")
-    print(x)
-    print("y: ")
-    print(y)
-    predict_by_position(x, y)
+    # read file data into dataframe
+with open("./can405_indoor_localization-master/data/UJIIndoorLoc/trainingData2.csv", "r") as _file:
+    # all buildings incloud, except for the useless value
+    # df_raw: pd.DataFrame = pd.read_csv(_file).loc[:, "LONGITUDE":"BUILDINGID"]
+    df_raw = pd.read_csv(_file).loc[:, "WAP001":"BUILDINGID"]
+
+# get mean of data which on the same position
+df = df_raw.groupby(["LONGITUDE", "LATITUDE", "BUILDINGID",
+                    "FLOOR"], as_index=False).mean()
+
+
+# generate dataset number
+df["DATASET"] = df.apply(lambda x: int(str(
+    int(x["BUILDINGID"])) + str(int(x["FLOOR"]))), axis=1)
+
+# every Building and floor have a Longitude and Latitude limitation
+df_lim = df.groupby(["DATASET"], as_index=False).aggregate(
+    {"LONGITUDE": ["max", "min"], "LATITUDE": ["max", "min"]})
+
+# todo: input_dim is 2 (LONGITUDE and Latitude) or 4 (plus BuildingID and Floor)?
+kernel = GPy.util.multioutput.ICM(
+    input_dim=2, num_outputs=520, kernel=GPy.kern.RBF(2))
+
+
+xy = df.loc[:, "LONGITUDE":"LATITUDE"].to_numpy()
+z = df.loc[:, "WAP001": "WAP520"].to_numpy()
+z = sklearn.preprocessing.normalize(z, norm="l2")
+
+m = GPy.models.GPCoregionalizedRegression([xy], [z], kernel=kernel)
+# m = dump_and_load_model(m)
+m.optimize_restarts(num_restarts=10)
+"""
+data_set = 0
+x_min = xy[:, 0].min()
+x_max = xy[:, 0].max()
+y_min = xy[:, 1].min()
+y_max = xy[:, 1].max()
+l = []
+for _ in range(1000):
+    l.append([random.uniform(x_min, x_max),
+             random.uniform(y_min, y_max), data_set])
+xy_pred = np.array(l)
+"""
+dataset = 0
+
+xy_pred = increase_pred_input_nd(1000, df_lim, data_set=dataset)
+Y_metadata = {"output_index": xy_pred[:, -1].astype(int)}
+z_pred_raw = m.predict(xy_pred, Y_metadata=Y_metadata)
+z_pred = z_pred_raw[0]
+plot(xy, z, xy_pred, z_pred, 8)
