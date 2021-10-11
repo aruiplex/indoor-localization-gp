@@ -137,6 +137,9 @@ df_new = pd.DataFrame(z_pred_ori, columns=df_raw.columns[:520]).astype("int64")
 
 df_new["LONGITUDE"] = xy_pred[:, 0]
 df_new["LATITUDE"] = xy_pred[:, 1]
-
-with open("./generated_data.csv", "w") as f:
+df_new["SPACEID"] = np.zeros(xy_pred[:, 0].shape,dtype=int)
+df_new["RELATIVEPOSITION"] = np.zeros(xy_pred[:, 0].shape,dtype=int)
+df_new["BUILDINGID"] = np.zeros(xy_pred[:, 0].shape,dtype=int)
+df_new["FLOOR"] = np.zeros(xy_pred[:, 0].shape,dtype=int)
+with open("./trainingData2.csv", "w") as f:
     f.write(df_new.to_csv(index=False))

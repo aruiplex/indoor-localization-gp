@@ -4,3 +4,4 @@
 *.csv
 *.pyc
 *.drawio
+!trainingData2.csv
