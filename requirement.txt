@@ -3,3 +3,4 @@ numpy
 matplotlib
 gpytorch
 pandas
+tensorflow

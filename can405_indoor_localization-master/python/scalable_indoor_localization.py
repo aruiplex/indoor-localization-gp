@@ -27,14 +27,14 @@
 ### import modules (except tensorflow/keras)
 import argparse
 import datetime
-import os
 import math
-import numpy as np
-import pandas as pd
+import os
 import sys
-from sklearn.preprocessing import scale
 from timeit import default_timer as timer
 
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import scale
 
 ### global constant variables
 #------------------------------------------------------------------------
@@ -60,7 +60,7 @@ CLASSIFIER_LOSS = 'binary_crossentropy'
 #------------------------------------------------------------------------
 # input files
 #------------------------------------------------------------------------
-path_train = '../data/UJIIndoorLoc/trainingData2.csv'           # '-110' for the lack of AP.
+path_train = '../data/UJIIndoorLoc_ori/trainingData2.csv'           # '-110' for the lack of AP.
 path_validation = '../data/UJIIndoorLoc/validationData2.csv'    # ditto
 #------------------------------------------------------------------------
 # output files
@@ -166,8 +166,8 @@ if __name__ == "__main__":
     import tensorflow as tf
     tf.random.set_seed(random_seed)  # initialize random seed generator of tensorflow
     from tensorflow import keras
-    from tensorflow.keras.layers import Dense, Dropout
     from tensorflow.keras import Sequential
+    from tensorflow.keras.layers import Dense, Dropout
     from tensorflow.keras.models import load_model
 
     # read both train and test dataframes for consistent label formation through one-hot encoding
@@ -303,7 +303,9 @@ if __name__ == "__main__":
         for j in idxs[i]:
             rfp = np.zeros(110)
             rfp[j] = 1
-            rows = np.where((train_labels == np.concatenate((blds[i], flrs[i], rfp))).all(axis=1)) # tuple of row indexes
+            a = np.concatenate((blds[i], flrs[i], rfp))
+            tf_array = (train_labels == a)
+            rows = np.where(tf_array.all(axis=1)) # tuple of row indexes
             if rows[0].size > 0:
                 if rfps[i][j] >= threshold[i]:
                     xs.append(train_df.loc[train_df.index[rows[0][0]], 'LONGITUDE'])

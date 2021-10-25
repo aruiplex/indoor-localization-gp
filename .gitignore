@@ -1,7 +1,8 @@
-/venv
+venv
 /start
 *.model
 *.csv
 *.pyc
 *.drawio
+__pycache__
 !trainingData2.csv
