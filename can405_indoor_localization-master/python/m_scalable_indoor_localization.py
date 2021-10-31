@@ -60,9 +60,9 @@ CLASSIFIER_LOSS = 'binary_crossentropy'
 #------------------------------------------------------------------------
 # input files
 #------------------------------------------------------------------------
-path_train = '../data/UJIIndoorLoc_ori/trainingData2.csv'           # '-110' for the lack of AP.
+path_train = '../data/UJIIndoorLoc_single/trainingData2.csv'           # '-110' for the lack of AP.
 # path_train = '../data/UJIIndoorLoc/trainingData2.csv'           # '-110' for the lack of AP.
-path_validation = '../data/UJIIndoorLoc/validationData2.csv'    # ditto
+path_validation = '../data/UJIIndoorLoc_single/validationData2.csv'    # ditto
 #------------------------------------------------------------------------
 # output files
 #------------------------------------------------------------------------
@@ -277,19 +277,19 @@ if __name__ == "__main__":
     # calculate the accuracy of building and floor estimation
     preds = model.predict(test_AP_features, batch_size=batch_size)
     n_preds = preds.shape[0]
-    blds_results = (np.equal(np.argmax(blds, axis=1), np.argmax(preds[:, :3], axis=1))).astype(int)
-    acc_bld = blds_results.mean()
-    flrs_results = (np.equal(np.argmax(flrs, axis=1), np.argmax(preds[:, 3:8], axis=1))).astype(int)
-    acc_flr = flrs_results.mean()
-    acc_bf = (blds_results*flrs_results).mean()
+    # blds_results = (np.equal(np.argmax(blds, axis=1), np.argmax(preds[:, :3], axis=1))).astype(int)
+    # acc_bld = blds_results.mean()
+    # flrs_results = (np.equal(np.argmax(flrs, axis=1), np.argmax(preds[:, 3:8], axis=1))).astype(int)
+    # acc_flr = flrs_results.mean()
+    # acc_bf = (blds_results*flrs_results).mean()
     
     # calculate positioning error when building and floor are correctly estimated
-    mask = np.logical_and(blds_results, flrs_results)  # mask index array for correct location of building and floor
-    x_test_utm = x_test_utm[mask]
-    y_test_utm = y_test_utm[mask]
-    blds = blds[mask]
-    flrs = flrs[mask]
-    rfps = (preds[mask])[:, 8:118]
+    # mask = np.logical_and(blds_results, flrs_results)  # mask index array for correct location of building and floor
+    # x_test_utm = x_test_utm[mask]
+    # y_test_utm = y_test_utm[mask]
+    # blds = blds[mask]
+    # flrs = flrs[mask]
+    # rfps = (preds[mask])[:, 8:118]
 
     n_success = len(blds)  # number of correct building and floor location
     n_loc_failure = 0
@@ -359,9 +359,9 @@ if __name__ == "__main__":
         f.write("  - Classifier loss: %s\n" % CLASSIFIER_LOSS)
         f.write("  - Classifier dropout rate: %.2f\n" % dropout)
         f.write("* Performance\n")
-        f.write("  - Accuracy (building): %e\n" % acc_bld)
-        f.write("  - Accuracy (floor): %e\n" % acc_flr)
-        f.write("  - Accuracy (building-floor): %e\n" % acc_bf)
+        # f.write("  - Accuracy (building): %e\n" % acc_bld)
+        # f.write("  - Accuracy (floor): %e\n" % acc_flr)
+        # f.write("  - Accuracy (building-floor): %e\n" % acc_bf)
         f.write("  - Location estimation failure rate (given the correct building/floor): %e\n" % loc_failure)
         f.write("  - Positioning error (meter): %e\n" % mean_pos_err)
         f.write("  - Positioning error (weighted; meter): %e\n" % mean_pos_err_weighted)
