@@ -1,0 +1,13 @@
+{
+    "file": {
+        "df_file": "data/campus.csv",
+        "model_file": "model/LCM_matern.pl",
+        "train": "fakeData/trainingData2.csv"
+    },
+    "generate": {
+        "points_num": 2000
+    },
+    "model": {
+        "data_set": 0
+    }
+}
