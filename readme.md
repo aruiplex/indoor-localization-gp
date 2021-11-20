@@ -29,7 +29,7 @@ The following code example is one floor.
 >>> pd_raw_b_0_f_0 = pd.read_csv("building_0_floor_0.csv")
 >>> pd_raw_b_0_f_0.shape
 (1059, 530)
->>> df_b_0_f_0 = pd_raw_b_0_f_0.groupby(["LONGITUDE", "LATITUDE"], as_index=False).mean()
+>>> df_b_0_f_0 = pd_raw_b_0_f_0.groupby(["LONGITUDE", "LATITUDE", "FLOOR", "BUILDINGID"], as_index=False).mean()
 >>> df_b_0_f_0.shape
 (54, 530)
 >>> 1059/54
@@ -46,12 +46,29 @@ In the all buildings and floors dataset.
 >>> df_raw.shape
 (19937, 524)
 >>> df.shape
-(692, 524)
+(933, 529)
 ```
 
-The all buildings and floors are 19937 records and 692 position. The file data with repeat named `campus.csv`, the file data without repeat named `campus_clean.csv` .
+The all buildings and floors are 19937 records and 933 position. The file data with repeat named `campus.csv`, the file data without repeat named `campus_clean.csv` .
 
 
+
+### From single floor to all buildings
+
+ Analysis the dataset `campus_clean`. The source code is `src/dev/defineLim`.
+
+```python
+df = pd.read_csv("/home/aruix/aruixDAO/Code/gaussian_process/data/campus_clean.csv").filter(
+    ["LONGITUDE", "LATITUDE", "BUILDINGID", "FLOOR"]).copy()
+print(df.groupby(["BUILDINGID", "FLOOR"]).max())
+print(df.groupby(["BUILDINGID", "FLOOR"]).min())
+```
+
+The ouput is:
+
+![image-20211120213358063](image-20211120213358063.png)
+
+Therefore, on the same the longitude and latidute are different. I need to generate points by floors.
 
 
 

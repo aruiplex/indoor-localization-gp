@@ -15,7 +15,7 @@ class ProcessData:
             pd.dataframe: duplicated-free dataframe
         """
 
-        df = df_raw.groupby(["LONGITUDE", "LATITUDE"], as_index=False).mean()
+        df = df_raw.groupby(["LONGITUDE", "LATITUDE", "FLOOR", "BUILDINGID"], as_index=False).mean()
         logger.info("De-duplication done.")
         return df
     
