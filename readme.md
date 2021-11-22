@@ -66,7 +66,7 @@ print(df.groupby(["BUILDINGID", "FLOOR"]).min())
 
 The ouput is:
 
-![image-20211120213358063](image-20211120213358063.png)
+![image-20211120213358063](./image/image-20211120213358063.png)
 
 Therefore, on the same the longitude and latidute are different. I need to generate points by floors.
 

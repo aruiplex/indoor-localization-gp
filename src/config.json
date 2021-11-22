@@ -5,7 +5,8 @@
         "train": "fakeData/trainingData2.csv"
     },
     "generate": {
-        "points_num": 2000
+        "points_num": 2000,
+        "real_fake_ratio": 0.5
     },
     "model": {
         "data_set": 0

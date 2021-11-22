@@ -8,6 +8,7 @@ from loguru import logger
 class Model:
 
     def __init__(self, xy, z):
+        self._kernal()
         # Gaussian process regression model
         self.m = GPy.models.GPCoregionalizedRegression(
             [xy], [z], kernel=self.kernel)
@@ -49,5 +50,5 @@ class Model:
         Y_metadata = {"output_index": xy_pred[:, -1].astype(int)}
         z_pred_raw = self.m.predict(xy_pred, Y_metadata=Y_metadata)
         z_pred = z_pred_raw[0]
-        logger.info(f"Done Prediction\n{z_pred}")
+        logger.info(f"Done Prediction\n{z_pred.shape}")
         return z_pred

@@ -28,19 +28,22 @@ from config import cfg
 
 class Generate:
 
-    def boundary(self, xy):
+    def __init__(self, xy):
         self.x_min = xy[:, 0].min()
         self.x_max = xy[:, 0].max()
         self.y_min = xy[:, 1].min()
         self.y_max = xy[:, 1].max()
+        self.n = xy.shape[0]
 
     def xy_pred(self):
         data_set = cfg["model"]["data_set"]
         l = []
-        fake_points_number = cfg["generate"]["points_num"]
-        logger.info(f"fake_points_number: {fake_points_number}")
-        for _ in range(fake_points_number):
+        real_fake_ratio = cfg["generate"]["real_fake_ratio"]
+        fake_num = int(real_fake_ratio * self.n)
+        logger.info(f"fake_num: {fake_num}")
+        for _ in range(fake_num):
             l.append([random.uniform(self.x_min, self.x_max),
                       random.uniform(self.y_min, self.y_max), data_set])
-        xy_pred = np.array(l)
-        return xy_pred
+        # xy_pred = np.array(l)
+        # return xy_pred
+        return l

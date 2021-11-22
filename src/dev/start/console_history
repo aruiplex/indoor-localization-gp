@@ -1,0 +1,318 @@
+import pickle
+import pickal
+from PIL import Image
+import json5
+import dataframe as df
+import main
+import MaoYanFont
+import cv2
+from loguru import logger
+import os
+import time
+import pandas as pd
+import bs4
+import requests
+import numpy
+import GPy
+import numpy as np
+import socket
+import loguru
+import json
+
+
+def most_common(lst):
+    return max(set(lst), key=lst.count)
+
+
+l = [11, 11, 11, 1, 243, 5, 1]
+l
+most_common(l)
+l.count()
+l.count
+l.count.__str__
+l.count.__str__()
+most_common(l)
+json.dumps({"a": 1})
+loguru.logger.success("hello world")
+bytearray([b"asdf"])
+a = bytearray(b"asdf")
+a
+str(a)
+a.decode()
+socket.gethostname()
+socket.gethostaddr()
+socket.gethostbyaddr()
+f = open("./report.md", "r")
+f
+f.read()
+22**2
+np.array([1, 2, 3, 4, 5, 6])
+a = np.array([1, 2, 3, 4, 5, 6])
+np.array([1, 2, 3, 4, 5, 6])
+np.array([1, 2, 3, 4, 5, 6])[np.newaxis]
+np.array([1, 2, 3, 4, 5, 6])[np.newaxis].T
+len("contactcontactcontactcontactcontactcontactcontactcontactcontactcontactcontactcontactcontactcontt")
+len("contactcontactcontactcontactcontactcontactcontactcontactcontactcontacntactcontt")
+newX = np.arange(100, 110)[:, None]
+newX = np.hstack([newX, np.ones_like(newX)])
+newX
+newX[:, 1:].astype(int)
+l = [0.4312, 0.241, 1]
+l
+np.array(l)
+np.array(l, dtype=[float, float, int])
+np.array(l, dtype=(float, float, int))
+xy_pred[:, -1:]
+url = "https://baidu.com"
+req = requests.request("GET", url=url)
+req = requests.request("GET", url=url)
+req.request
+req.request()
+url = "https://maoyan.com/board/4"
+# url = "https://baidu.com"
+s = requests.Session()
+s.headers = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36"}
+r = s.request("GET", url=url)
+r.encoding = "utf-8"
+c = r.text
+soup = bs4.BeautifulSoup(c, "html.parser")
+tags_dd = soup.find_all("dd")
+tags_dd
+tags_dd[0]
+path = "https://maoyan.com/board/4?offset="
+movie_prefix = "https://maoyan.com"
+s = requests.Session()
+s.headers = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36",
+    "Cookie": "__mta=220434983.1634193511952.1634358390408.1634358397970.17; uuid_n_v=v1; uuid=58BB89202CB911ECA55FB3CFA9262833BB3ECA70687D4F2B8EB54895C9C14E30; _csrf=8aa7cda1fbcecf89640e9400340425e65ab5feddcb835616893fbdacd2625110; Hm_lvt_703e94591e87be68cc8da0da7cbd0be2=1634193512; _lxsdk_cuid=17c7d86155b1a-0934cb32140a51-1a2f1c08-1fa400-17c7d86155cc8; _lxsdk=58BB89202CB911ECA55FB3CFA9262833BB3ECA70687D4F2B8EB54895C9C14E30; Hm_lpvt_703e94591e87be68cc8da0da7cbd0be2=1634358398; _lxsdk_s=17c8757f5cd-dc5-498-b0c||9"
+}
+href_links = []
+ctr = 0
+for offset in range(0, 100, 10):
+    url = path + str(offset)
+    r = s.request("GET", url=url)
+    r.encoding = "utf-8"
+    c = r.text
+    # logger.info(f"contents in response: {c}")
+    if "猫眼验证中心" in c:
+        logger.error("need for verify code")
+        exit(0)
+d = {"a": 1, "b": 2}
+d
+"a" in d
+d["a"]
+np.array([1, 1, 1, 1])
+np.array([1, 1, 1, 1])[:, np.newaxis]
+np.array([1, 1, 1, 1])[np.newaxis]
+np.array([1, 1, 1, 1])[np.newaxis].ndim
+np.array([1, 1, 1, 1]) == np.array([1, 2, 1, 1])
+np.array([1, 1, 1, 1]) == np.array([1, 2, 1])
+image_path_1 = "../dataset/aft/1.png"
+image1 = cv2.imread(image_path_1)
+image
+image1
+image1 = cv2.imread(image_path_1)
+image1
+image_path_1 = "dataset/aft/1.png"
+image1 = cv2.imread(image_path_1)
+image1
+image_path_2 = "dataset/ori/1.jpg"
+image2 = cv2.imread(image_path_2)
+image2
+image2.shape
+image1.shape
+image1[0]
+image1[0][0]
+image1[0]
+image2
+image1
+image1 - image2
+image1[0]
+image1[0][0]
+image1[0, 0]
+image1.ndim
+np.ndindex(image0.shape)
+np.ndindex(image1.shape)
+i = np.ndindex(image1.shape)
+image.shape
+image1.shape
+np.empty(image1.shape)
+image1[0, 0, 0]
+image1[0, 0]
+image1[0][0][0]
+image1
+image1[0][0][1]
+image1.shape
+image1.shape[:-1]
+cv2.subtract(image1-image2)
+cv2.subtract(image1, image2)
+cv2.imwrite("subtrct.jpg", cv2.subtract(image1, image2))
+with open("./data_silce/building_0_floor_0.csv", "r") as _file:
+    # all buildings incloud, except for the useless value
+    # df_raw: pd.DataFrame = pd.read_csv(_file).loc[:, "LONGITUDE":"BUILDINGID"]
+    df_raw = pd.read_csv(_file).loc[:, "WAP001":"BUILDINGID"]
+with open("./data_silce/building_0_floor_0.csv", "r") as _file:
+    # all buildings incloud, except for the useless value
+    # df_raw: pd.DataFrame = pd.read_csv(_file).loc[:, "LONGITUDE":"BUILDINGID"]
+    df_raw = pd.read_csv(_file).loc[:, "WAP001":"BUILDINGID"]
+with open("./data_silce/building_0_floor_0.csv", "r") as _file:
+    pass
+with open("./data_silce/building_0_floor_0.csv", "r") as _file:
+	df_raw = pd.read_csv(_file).loc[:, "WAP001":"BUILDINGID"]
+df_raw
+df_raw[:100]
+df = open("./data_slice/building_0_floor_0.csv")
+fd = open("data_silce/building_0_floor_0.csv")
+pd.read_csv(fd)
+df = pd.read_csv(fd)
+fd = open("data_silce/building_0_floor_0.csv")
+df = pd.read_csv(fd)
+df
+f = open("./v.csv", "w")
+df[:, 1:]
+df.columns[1:]
+del(df["Unnamed: 0"])
+df
+f.write(df.to_csv())
+f.flush()
+f = open("./v.csv", "w")
+f.write(df.to_csv(index=False))
+f.flush()
+f = open("./v.csv", "w")
+f.write(df.to_csv(index=False))
+f.flush()
+p = Image.open("2017110401.jpg")
+p
+p.size
+p.resize((1999, 1333))
+p.size()
+p.size
+1999/1333
+p.resize((2000, 1333))
+p.resize((2000, 1333)).show()
+p.resize((1999, 1333)).show()
+pickle.load("./df.obj")
+fd = open("df.obj", "rb")
+df = pickle.load(fd)
+t = fd.read()
+t
+fd = open("df.obj", "rb")
+t = fd.read()
+df = pickle.load(t)
+fd
+fd.closed
+fd.read()
+fd.seek(0)
+fd.read()
+fd.seek(0)
+df = pickle.load(fd)
+filename = 'df.obj'
+with open(filename, 'wb') as f:
+	df = pickle.load(f)
+with open(filename, 'rb') as f:
+	df = pickle.load(f)
+df = pd.read_csv("MaoYanTop100.csv")
+df
+del(df["awards"])
+df
+del(df["ranking"])
+df
+del(df["name_en"])
+df
+df["name"] = df["name_zh"]
+df
+del(df["name_zh"])
+df
+del(df["Unnamed: 0"])
+df
+help(pickle.dump())
+help(pickle.dump()
+
+df.to_csv("Qingyuan.Gao1823638.csv", index=False)
+100/15
+14*1/15
+14*10/15
+13*10/15
+13*10/15 - 6.67
+import requests
+requests.get("http://vibktprfx-prod-prod-tao-mm-cn-shanghai.oss-cn-shanghai.aliyuncs.com/pixelai-face-beauty/2021-11-10/a98b4415-908d-449a-835d-d05bc1a972c1_process.jpg?Expires=1636555800&OSSAccessKeyId=LTAI4FoLmvQ9urWXgSRpDvh1&Signature=NfPrR5anJGdc89oCqndpljzuQDI%3D")
+a=requests.get("http://vibktprfx-prod-prod-tao-mm-cn-shanghai.oss-cn-shanghai.aliyuncs.com/pixelai-face-beauty/2021-11-10/a98b4415-908d-449a-835d-d05bc1a972c1_process.jpg?Expires=1636555800&OSSAccessKeyId=LTAI4FoLmvQ9urWXgSRpDvh1&Signature=NfPrR5anJGdc89oCqndpljzuQDI%3D")
+a.content
+from PIL import image
+from PIL import Image
+Image.open(a.content)
+a.content
+import io
+b=io.BytesIO(a.content)
+len(b)
+Image.open(b)
+i=Image.open(b)
+i
+i.save("./00.jpg")
+next()
+help(next())
+import os
+l=os.listdir("/data/mask_treatment_dataset/ori")
+len(l)
+l
+3*700/60
+import cfg
+exit
+import cfg
+cfg.cfg
+import cfg
+cfg.config
+cfg.config.cfg
+import cfg
+cfg.cfg
+cfg.config.cfg
+import cfg
+cfg.cfg
+import config
+192092 // 1000
+import pandas as pd
+df_raw=pd.read_csv("./data/all.csv")
+df_raw
+df_raw.shape
+df_raw.row
+a, b=df_raw.shape
+a
+b
+import pandas as pd
+pd.read_csv("data/campus.csv")
+pd.read_csv("data/campus.csv")["FLOOR"]
+df_raw=pd.read_csv("data/campus.csv")
+df=df_raw.groupby(["LONGITUDE", "LATITUDE", "FLOOR",
+                  "BUILDINGID"], as_index=False).mean()
+df
+df.to_csv("data/campus_clean.csv")
+df.shape
+df.to_csv("data/campus_clean.csv", index=False)
+df
+df.loc[]
+df.loc["BUILDINGID"]
+df.loc[:, "BUILDINGID"]
+df
+df=pd.read_csv("/home/aruix/aruixDAO/Code/gaussian_process/data/campus_clean.csv",
+                 names=["BUILDINGID", "FLOOR", "LONGITUDE", "LATITUDE"])
+df
+df=pd.read_csv("/home/aruix/aruixDAO/Code/gaussian_process/data/campus_clean.csv", names=[
+               "BUILDINGID", "FLOOR", "LONGITUDE", "LATITUDE"], dtype={"BUILDINGID": 'int', "FLOOR": 'int', "LONGITUDE": 'float', "LATITUDE": 'float'})
+df=pd.read_csv("/home/aruix/aruixDAO/Code/gaussian_process/data/campus_clean.csv",
+               names=["BUILDINGID", "FLOOR", "LONGITUDE", "LATITUDE"])
+df
+df.loc["FLOOR"]
+df.loc[:, "FLOOR"]
+df=pd.read_csv("/home/aruix/aruixDAO/Code/gaussian_process/data/campus_clean.csv",
+               header=["BUILDINGID", "FLOOR", "LONGITUDE", "LATITUDE"])
+df=pd.read_csv("/home/aruix/aruixDAO/Code/gaussian_process/data/campus_clean.csv").filter(
+    ["LONGTITUDE", "LATITUDE", "BUILDINGID", "FLOOR"]).copy()
+df
+df=pd.read_csv("/home/aruix/aruixDAO/Code/gaussian_process/data/campus_clean.csv").filter(
+    ["LONGITUDE", "LATITUDE", "BUILDINGID", "FLOOR"]).copy()
+df
+% save
+import readline
+readline.write_history_file('/home/ahj/history')
+readline.write_history_file('./console_history')

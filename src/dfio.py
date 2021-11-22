@@ -23,21 +23,23 @@ class DataFrameIO:
             df_raw = pd.read_csv(_file).loc[:, "WAP001":"BUILDINGID"]
         return df_raw
 
-    def df_new(self, xy_pred, z_pred_ori, columns):
+    def df_fake(self, xy_pred, z_pred_ori, columns):
         df_new = pd.DataFrame(z_pred_ori, columns=columns).astype("int64")
         df_new["LONGITUDE"] = xy_pred[:, 0]
         df_new["LATITUDE"] = xy_pred[:, 1]
-        df_new["BUILDINGID"] = 0
-        df_new["FLOOR"] = 0
-        df_new["SPACEID"] = 0
-        df_new["RELATIVEPOSITION"] = 0
+        # df_new["BUILDINGID"] = 0
+        # df_new["FLOOR"] = 0
+        # df_new["SPACEID"] = 0
+        # df_new["RELATIVEPOSITION"] = 0
         return df_new
 
-    def df_mix(self, df_raw, df_new):
-        df_new = df_new.append(df_raw)
+    def df_mix(self, df_ori, df_new):
+        df_new = df_new.append(df_ori)
         df_new.reset_index()
+        logger.info(f"df_mix generate finish.")
+        return df_new
 
+    def save_df(self, df_mix:pd.DataFrame):
         with open(cfg["file"]["train"], "w") as f:
-            f.write(df_new.to_csv(index=False))
-            logger.info(
-                f'training data write finsh, to {cfg["file"]["train"]}')
+            f.write(df_mix.to_csv(index=False))
+            logger.info(f'training data write finsh, to {cfg["file"]["train"]}.')
