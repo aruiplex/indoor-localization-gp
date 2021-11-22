@@ -24,6 +24,16 @@ class DataFrameIO:
         return df_raw
 
     def df_fake(self, xy_pred, z_pred_ori, columns):
+        """Companion the fake xy and z into dataframe.
+
+        Args:
+            xy_pred (numpy array): 2d numpy array, LONGITUDE and LATITUDE.
+            z_pred_ori (numpy array): wap data.
+            columns (dataframe index): dataframe header
+
+        Returns:
+            dataframe: fake dataframe
+        """
         df_new = pd.DataFrame(z_pred_ori, columns=columns).astype("int64")
         df_new["LONGITUDE"] = xy_pred[:, 0]
         df_new["LATITUDE"] = xy_pred[:, 1]
@@ -34,12 +44,25 @@ class DataFrameIO:
         return df_new
 
     def df_mix(self, df_ori, df_new):
+        """Mix the real dataframe and fake dataframe together. 
+
+        Args:
+            df_ori (dataframe): real data
+            df_new (dataframe): fake data
+
+        Returns:
+            dataframe: the mixed dataframe
+        """
         df_new = df_new.append(df_ori)
         df_new.reset_index()
         logger.info(f"df_mix generate finish.")
         return df_new
 
-    def save_df(self, df_mix:pd.DataFrame):
+    def save_df(self, df_mix: pd.DataFrame):
+        """Save the dataframe into csv file.
+        """
+
         with open(cfg["file"]["train"], "w") as f:
             f.write(df_mix.to_csv(index=False))
-            logger.info(f'training data write finsh, to {cfg["file"]["train"]}.')
+            logger.info(
+                f'training data write finsh, to {cfg["file"]["train"]}.')

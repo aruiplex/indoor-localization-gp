@@ -26,6 +26,8 @@ class Model:
     def _dump_and_load_model(self, m):
         """If the model file exists, load the model.
         If the model file does not exist, train the model.
+        
+        Store the Gaussian Process model to the model file. Reduce the training time.
 
         Args:
             m (model): the train model
@@ -47,6 +49,14 @@ class Model:
                 return m
 
     def z_pred(self, xy_pred):
+        """Use Gaussian process regression model to predict the z value.
+
+        Args:
+            xy_pred (numpy array): 2d numpy array, LONGITUDE and LATITUDE.
+
+        Returns:
+            numpy array: the predicted z value.
+        """
         Y_metadata = {"output_index": xy_pred[:, -1].astype(int)}
         z_pred_raw = self.m.predict(xy_pred, Y_metadata=Y_metadata)
         z_pred = z_pred_raw[0]

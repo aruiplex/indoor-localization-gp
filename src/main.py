@@ -45,17 +45,21 @@ for df_floor in dfs:
 
 # ---------------------- </generate data> ----------------------
 
+# geo position
 xy_pred = np.array(xy_pred)
+# wap values
 z_pred = m.z_pred(xy_pred)
 
+# clean the data 
 z_pred_ori = processData.destandardization(z_pred)
-
 z_pred_ori = processData.clean_pred(z_pred_ori)
 
+# get the dataframe header
 cols = df_raw.columns[:520]
+# create the dataframe
 df_fake = dataFrameIO.df_fake(xy_pred, z_pred_ori, cols)
 
-# mix the real data and fake data together 
-
+# mix the real data and fake data together
 df_mix = dataFrameIO.df_mix(df, df_fake)
+# save to file
 dataFrameIO.save_df(df_mix)
