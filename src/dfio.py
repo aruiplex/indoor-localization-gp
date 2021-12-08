@@ -23,7 +23,7 @@ class DataFrameIO:
             df_raw = pd.read_csv(_file).loc[:, "WAP001":"BUILDINGID"]
         return df_raw
 
-    def df_fake(self, xy_pred, z_pred_ori, columns):
+    def df_fake(self, xy_pred, z_pred_ori, columns, format="LL"):
         """Companion the fake xy and z into dataframe.
 
         Args:
@@ -35,8 +35,14 @@ class DataFrameIO:
             dataframe: fake dataframe
         """
         df_new = pd.DataFrame(z_pred_ori, columns=columns).astype("int64")
-        df_new["LONGITUDE"] = xy_pred[:, 0]
-        df_new["LATITUDE"] = xy_pred[:, 1]
+        if format == "LL":
+            df_new["LONGITUDE"] = xy_pred[:, 0]
+            df_new["LATITUDE"] = xy_pred[:, 1]
+        else :
+            df_new["X"] = xy_pred[:, 0]
+            df_new["Y"] = xy_pred[:, 1]
+            df_new["Z"] = xy_pred[:, 2]
+            
         # df_new["BUILDINGID"] = 0
         # df_new["FLOOR"] = 0
         # df_new["SPACEID"] = 0

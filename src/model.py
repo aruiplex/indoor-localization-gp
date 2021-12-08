@@ -7,7 +7,8 @@ from loguru import logger
 
 class Model:
 
-    def __init__(self, xy, z):
+    def __init__(self, xy, z, num_outputs):
+        self.num_outputs = num_outputs
         self._kernal()
         # Gaussian process regression model
         self.m = GPy.models.GPCoregionalizedRegression(
@@ -19,8 +20,8 @@ class Model:
         """Gaussian process regression kernel
         """
         # kernel = RBF * matern52
-        self.kernel = GPy.util.multioutput.LCM(
-            input_dim=2, num_outputs=520, kernels_list=[GPy.kern.Matern52(2)])
+        self.kernel = GPy.util.multioutput.ICM(
+            input_dim=3, num_outputs=self.num_outputs, kernel=GPy.kern.Matern52(3))
         logger.info(f"Done Kernel\n{self.kernel}")
 
     def _dump_and_load_model(self, m):

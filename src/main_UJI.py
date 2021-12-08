@@ -20,7 +20,7 @@ z_original = df.loc[:, "WAP001": "WAP520"].to_numpy()
 # standardization of WAP data
 z = processData.standardization(z_original)
 # create model
-m = Model(xy, z)
+m = Model(xy, z, 520)
 # ---------------------- </train model> ----------------------
 
 # ---------------------- <generate data> ----------------------
@@ -48,16 +48,15 @@ for df_floor in dfs:
 # geo position
 xy_pred = np.array(xy_pred)
 # wap values
-z_pred = m.z_pred(xy_pred)
+v_pred = m.z_pred(xy_pred)
 
-# clean the data 
-z_pred_ori = processData.destandardization(z_pred)
-z_pred_ori = processData.clean_pred(z_pred_ori)
+# clean the data
+v_pred = processData.clean_pred(v_pred)
 
 # get the dataframe header
-cols = df_raw.columns[:520]
+cols = df_raw.columns[:992]
 # create the dataframe
-df_fake = dataFrameIO.df_fake(xy_pred, z_pred_ori, cols)
+df_fake = dataFrameIO.df_fake(xy_pred, v_pred, cols)
 
 # mix the real data and fake data together
 df_mix = dataFrameIO.df_mix(df, df_fake)

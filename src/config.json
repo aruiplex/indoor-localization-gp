@@ -1,7 +1,7 @@
 {
     "file": {
         "df_file": "data/campus.csv",
-        "model_file": "model/LCM_matern.pl",
+        "model_file": "model/tut_LCM_matern.pl",
         "train": "fakeData/trainingData2.csv"
     },
     "generate": {

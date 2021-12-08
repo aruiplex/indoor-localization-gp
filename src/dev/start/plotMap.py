@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import pandas as pd
 import numpy as np
-import main
+import main_UJI
 
 
 def plot_wap001():
@@ -28,7 +28,7 @@ def plot_wap001_2():
     xx = np.hstack((x.reshape(-1, 1), y.reshape(-1, 1)))
     x_pred, y_pred = -7632.1436, 4864982.2171
     input_pred = np.array([[x_pred, y_pred]])
-    z_pred = main.predict_by_position(xx, z_007, input_pred=input_pred)[0][7]
+    z_pred = main_UJI.predict_by_position(xx, z_007, input_pred=input_pred)[0][7]
     print(z_pred)
     # ax.plot3D(x, y, z, 'gray')
     ax.scatter(x, y, z_007, c=z_007, cmap='rainbow', label="WAP007")

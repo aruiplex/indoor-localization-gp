@@ -1,0 +1,7 @@
+{
+    "python.analysis.extraPaths": [
+        "/home/aruix/.local/lib/python3.8/site-packages",
+        "${workspaceFolder}/venv/lib/python3.8/site-packages",
+        "./src"
+    ]
+}

@@ -17,6 +17,9 @@ class Generate:
         self.x_max = xy[:, 0].max()
         self.y_min = xy[:, 1].min()
         self.y_max = xy[:, 1].max()
+        if xy.shape[1] == 3:
+            self.z_min = xy[:, 2].min()
+            self.z_max = xy[:, 2].max()
         self.n = xy.shape[0]
 
     def xy_pred(self):
@@ -33,4 +36,22 @@ class Generate:
         for _ in range(fake_num):
             l.append([random.uniform(self.x_min, self.x_max),
                       random.uniform(self.y_min, self.y_max), data_set])
+        return l
+    
+    def xyz_pred(self):
+        """generate the fake longitude and latitude into python list
+
+        Returns:
+            list: the xy_pred
+        """
+        data_set = cfg["model"]["data_set"]
+        l = []
+        real_fake_ratio = cfg["generate"]["real_fake_ratio"]
+        fake_num = int(real_fake_ratio * self.n)
+        logger.info(f"fake_num: {fake_num}")
+        for _ in range(fake_num):
+            l.append([random.uniform(self.x_min, self.x_max),
+                      random.uniform(self.y_min, self.y_max), 
+                      random.uniform(self.z_min, self.z_max), 
+                      data_set])
         return l
