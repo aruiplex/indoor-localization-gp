@@ -8,55 +8,58 @@ dataFrameIO = DataFrameIO()
 processData = ProcessData()
 
 # WAP data with duplicate
-df_raw = dataFrameIO.df_raw()
+df = dataFrameIO.df_raw_tut()
 # WAP data without duplicate
-df = processData.de_duplication(df_raw)
+# df = processData.de_duplication(df_raw)
 
 # ---------------------- <train model> ----------------------
 # LONGITUDE and LATITUDE
-xy = df.loc[:, "LONGITUDE":"LATITUDE"].to_numpy()
+xyz = df.loc[:, "X":"Z"].to_numpy()
 # raw WAP data
-z_original = df.loc[:, "WAP001": "WAP520"].to_numpy()
+rss_original = df.iloc[:, :-5].to_numpy()
 # standardization of WAP data
-z = processData.standardization(z_original)
+rss = processData.standardization(rss_original)
+output_dim = xyz.shape[1]
 # create model
-m = Model(xy, z, 520)
+m = Model(xyz, rss, output_dim)
 # ---------------------- </train model> ----------------------
 
 # ---------------------- <generate data> ----------------------
 group_keys = processData.get_floors_num(df)
-dfs = []
+df_floors = []
 for building_id, floor in group_keys:
-    dfs.append(processData.split_data(df, building_id, floor))
+    df_floors.append(processData.split_data(df, building_id, floor))
 
-xy_pred = []
-for df_floor in dfs:
+xyz_pred = []
+floor = 0
+for df_floor in df_floors:
     # LONGITUDE and LATITUDE as xy
-    xy_floor = df_floor.loc[:, "LONGITUDE":"LATITUDE"].to_numpy()
+    xyz_floor = df_floor.loc[:, "X":"Z"].to_numpy()
     # raw WAP data as z
-    z_original_floor = df_floor.loc[:, "WAP001": "WAP520"].to_numpy()
+    # z_original_floor = df_floor.iloc[:, 0: 992].to_numpy()
     # generate input value to prediction
-    generate = Generate(xy_floor)
+    generate = Generate(xyz_floor)
     # the xy input data base on floor
-    xy_pred_floor = generate.position_pred()
+    xyz_pred_floor = generate.position_pred()
     # add all floor input prediect data together
-    xy_pred.extend(xy_pred_floor)
+    xyz_pred.extend(xyz_pred_floor)
     # xy_pred = np.append(xy_pred, xy_pred_floor, axis=1)
 
 # ---------------------- </generate data> ----------------------
 
 # geo position
-xy_pred = np.array(xy_pred)
+xyz_pred = np.array(xyz_pred)
 # wap values
-v_pred = m.rss_pred(xy_pred)
+rss_pred = m.rss_pred(xyz_pred)
 
 # clean the data
-v_pred = processData.clean_pred(v_pred)
+rss_pred = processData.destandardization(rss_pred)
+rss_pred = processData.clean_pred(rss_pred)
 
 # get the dataframe header
-cols = df_raw.columns[:992]
+cols = df.columns[:992]
 # create the dataframe
-df_fake = dataFrameIO.df_fake(xy_pred, v_pred, cols)
+df_fake = dataFrameIO.df_fake(xyz_pred, rss_pred, cols, format="tut")
 
 # mix the real data and fake data together
 df_mix = dataFrameIO.df_mix(df, df_fake)

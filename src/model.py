@@ -1,3 +1,4 @@
+from cmath import log
 import os
 import pickle as pk
 from config import cfg
@@ -7,21 +8,29 @@ from loguru import logger
 
 class Model:
 
-    def __init__(self, xy, z, num_outputs):
+    def __init__(self, position, rss, num_outputs):
         self.num_outputs = num_outputs
-        self._kernal()
+        self._kernal(3)
         # Gaussian process regression model
         self.m = GPy.models.GPCoregionalizedRegression(
-            [xy], [z], kernel=self.kernel)
+            [position], [rss], kernel=self.kernel)
         self.m = self._dump_and_load_model(self.m)
         logger.info(f"Done Regression\n{self.m}")
 
-    def _kernal(self):
+    def _kernal(self, dim):
         """Gaussian process regression kernel
         """
-        # kernel = RBF * matern52
-        self.kernel = GPy.util.multioutput.ICM(
-            input_dim=3, num_outputs=self.num_outputs, kernel=GPy.kern.Matern52(3))
+        if dim == 3:
+            # kernel = RBF * matern52
+            self.kernel = GPy.util.multioutput.ICM(
+                input_dim=3, num_outputs=self.num_outputs, kernel=GPy.kern.Matern52(3))
+            logger.info("This is the kernel for TUT dataset")
+
+        elif dim == 2:
+            self.kernel = GPy.util.multioutput.LCM(
+                input_dim=2, num_outputs=520, kernels_list=[GPy.kern.Matern52(2)])
+            logger.info("This is the kernel for UJI dataset")
+            
         logger.info(f"Done Kernel\n{self.kernel}")
 
     def _dump_and_load_model(self, m):
@@ -49,17 +58,17 @@ class Model:
                 pk.dump(m, _f)
                 return m
 
-    def z_pred(self, xy_pred):
+    def rss_pred(self, position):
         """Use Gaussian process regression model to predict the z value.
 
         Args:
-            xy_pred (numpy array): 2d numpy array, LONGITUDE and LATITUDE.
+            position (numpy array): 2d numpy array, LONGITUDE and LATITUDE.
 
         Returns:
             numpy array: the predicted z value.
         """
-        Y_metadata = {"output_index": xy_pred[:, -1].astype(int)}
-        z_pred_raw = self.m.predict(xy_pred, Y_metadata=Y_metadata)
-        z_pred = z_pred_raw[0]
+        Y_metadata = {"output_index": position[:, -1].astype(int)}
+        rss_pred_raw = self.m.predict(position, Y_metadata=Y_metadata)
+        z_pred = rss_pred_raw[0]
         logger.info(f"Done Prediction\n{z_pred.shape}")
         return z_pred

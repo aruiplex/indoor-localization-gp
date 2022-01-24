@@ -78,6 +78,6 @@ class ProcessData:
         """
         for z_row in z_pred:
             for z in z_row:
-                if z < -110:
-                    z = -110
+                if z <= -100:
+                    z = 100
         return z_pred
